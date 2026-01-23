@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #e5e5e5;
+  background: #0a0a0a;
+}
+
+body {
+  min-height: 100vh;
+}
+
+/* Markdown content styles */
+.markdown-content h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.markdown-content h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+
+.markdown-content h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.markdown-content h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.markdown-content p {
+  margin-bottom: 1rem;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.markdown-content li {
+  margin-bottom: 0.25rem;
+}
+
+.markdown-content a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.markdown-content a:hover {
+  opacity: 0.8;
+}
+
+.markdown-content hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 2rem 0;
+}
+
+.markdown-content blockquote {
+  border-left: 2px solid #333;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+  color: #999;
+}
+
+.markdown-content code {
+  background: #111;
+  border: 1px solid #333;
+  padding: 2px 6px;
+  font-size: 14px;
+  border-radius: 2px;
+}
+
+.markdown-content pre {
+  background: #111;
+  border: 1px solid #333;
+  padding: 16px;
+  font-size: 14px;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  border-radius: 2px;
+}
+
+.markdown-content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.markdown-content th {
+  background: #111;
+  text-align: left;
+  padding: 12px;
+  border: 1px solid #333;
+  font-weight: 700;
+}
+
+.markdown-content td {
+  padding: 12px;
+  border: 1px solid #333;
+}
+
+.markdown-content strong {
+  color: #fff;
+  font-weight: 700;
+}
