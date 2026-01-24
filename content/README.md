@@ -121,9 +121,9 @@ Pact is not a replacement for these systems — it's complementary. Use smart co
 
 ## Get Started
 
-- [Specification](/specification) — The complete schema
-- [Examples](/examples) — Concrete pact instances
-- [Resolvers](/resolvers) — How resolution works
+- [Specification](/pact-spec/specification) — The complete schema
+- [Examples](/pact-spec/examples) — Concrete pact instances
+- [Resolvers](/pact-spec/resolvers) — How resolution works
 
 ---
 
