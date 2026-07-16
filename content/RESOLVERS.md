@@ -10,7 +10,7 @@ A **resolver** is any mechanism that can evaluate whether a pact's terms have be
 
 This separation is key: it allows different resolvers to compete on quality, cost, and speed while maintaining a standard commitment format.
 
-Under the default **optimistic** resolution policy (see [Specification → Lifecycle](/specification)), a resolver is only invoked when a party challenges an asserted outcome. Resolvers are dispute infrastructure, not a toll booth on every agreement.
+Under the default **optimistic** resolution policy (see [Specification → Lifecycle](/pact-spec/specification)), a resolver is only invoked when a party challenges an asserted outcome. Resolvers are dispute infrastructure, not a toll booth on every agreement.
 
 ---
 
@@ -137,7 +137,7 @@ Note that error responses are not resolutions. A resolver that persistently erro
 | `void` | Pact cannot be meaningfully evaluated (force majeure, mutual fault) |
 | `indeterminate` | Evidence insufficient to make a judgment |
 
-These match the `resolutions[].outcome` enum in the [Specification](/specification) exactly.
+These match the `resolutions[].outcome` enum in the [Specification](/pact-spec/specification) exactly.
 
 ### Confidence Scores
 
@@ -483,7 +483,7 @@ How do parties trust a resolver?
 
 1. **Reputation** — Resolvers build track records. Query past resolutions.
 2. **Staking** — Resolvers stake collateral, slashed for overturned decisions.
-3. **Appeals** — Resolutions can be appealed to a higher-tier resolver (see [Specification → Appeals](/specification)).
+3. **Appeals** — Resolutions can be appealed to a higher-tier resolver (see [Specification → Appeals](/pact-spec/specification)).
 4. **Transparency** — Reasoning is public; procedure is hash-pinned; the community can audit.
 
 ```json

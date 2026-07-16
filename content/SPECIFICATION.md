@@ -246,7 +246,7 @@ Criteria are referenced elsewhere (partial release, criteria evaluation) **by ar
 
 Freeform information that helps interpret the criteria but isn't directly evaluated — background, preferences, nuance.
 
-`context` is authored by the pact creator and is inside the commitment: the counterparty accepts it by signing. Resolvers MUST treat it as interpretive guidance for the criteria, never as instructions to the resolver (see the threat model in [Resolvers](/resolvers)).
+`context` is authored by the pact creator and is inside the commitment: the counterparty accepts it by signing. Resolvers MUST treat it as interpretive guidance for the criteria, never as instructions to the resolver (see the threat model in [Resolvers](/pact-spec/resolvers)).
 
 ### Attachments
 
@@ -462,7 +462,7 @@ Stakes can be combined:
 | `void` | Pact cannot be meaningfully evaluated (force majeure, mutual fault) |
 | `indeterminate` | Evidence insufficient to judge; disposition per policy default |
 
-`criteria_evaluation[].criterion` is the index into `terms.acceptance_criteria`. Resolvers MUST evaluate every criterion. The full resolver interface — request/response format, confidence scores, error codes — is defined in [Resolvers](/resolvers).
+`criteria_evaluation[].criterion` is the index into `terms.acceptance_criteria`. Resolvers MUST evaluate every criterion. The full resolver interface — request/response format, confidence scores, error codes — is defined in [Resolvers](/pact-spec/resolvers).
 
 ---
 
@@ -510,7 +510,7 @@ Commercial terms are sensitive. Because pacts commit by hash:
 - **Canonicalization is load-bearing.** Verify signatures against the JCS form only. Accepting near-miss serializations reintroduces hash ambiguity.
 - **Replay.** Party id, role, and chain are bound into every signature; verifiers MUST check all three.
 - **Mutable evidence.** A URI is a hint; the hash is the evidence. Resolvers MUST NOT evaluate content whose hash does not match the submitted hash, and MUST NOT fetch live, unpinned URLs as evidence.
-- **Adversarial evidence and prompt injection** (AI resolvers): see the threat model in [Resolvers](/resolvers).
+- **Adversarial evidence and prompt injection** (AI resolvers): see the threat model in [Resolvers](/pact-spec/resolvers).
 - **Resolver incentives.** Optimistic mode, appeals, resolution timeouts, and staked resolvers each remove a class of failure; high-stakes pacts SHOULD use all four. Dispute-market design has substantial prior art — [Kleros](https://kleros.io), [UMA's optimistic oracle](https://uma.xyz), [Reality.eth](https://reality.eth.limo) — and Pact deliberately standardizes the commitment format while delegating dispute-market mechanics to resolvers.
 
 ---
