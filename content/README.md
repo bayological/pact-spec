@@ -106,6 +106,12 @@ Traditional smart contracts (Solidity, etc.) encode deterministic conditions: "i
 
 **Difference:** Smart contracts can't handle ambiguity. "Deliver 3 distinct logo concepts" isn't computable. Pact structures these judgment-requiring commitments for external resolution.
 
+### Dispute-Resolution Protocols (Kleros, UMA, Reality.eth)
+
+[Kleros](https://kleros.io) runs decentralized juror markets for arbitration. [UMA's optimistic oracle](https://uma.xyz) lets anyone assert a claim that stands unless challenged, with escalation on dispute. [Reality.eth](https://reality.eth.limo) crowdsources answers with escalating bonds. These are the deepest prior art for the *resolution* side of Pact — years of work on juror incentives, bond escalation, and collusion resistance.
+
+**Difference:** These protocols each define their own dispute market bound to their own claim format. Pact standardizes the *commitment* format — terms, criteria, evidence, stakes — and treats dispute markets as pluggable resolvers behind a common interface. A Kleros court or a UMA-style optimistic flow can both sit behind a pact; Pact's optimistic resolution mode is directly inspired by UMA. Pact also targets resolvers those protocols don't: AI judges cheap enough to arbitrate a $50 agreement between two AI agents.
+
 ### How Pact Differs
 
 | System | Layer | Handles |
@@ -113,9 +119,20 @@ Traditional smart contracts (Solidity, etc.) encode deterministic conditions: "i
 | Smart Contracts | Execution | Deterministic conditions |
 | Cicero/Accord | Execution | Computable legal logic |
 | Ricardian | Representation | Legal prose + parameters |
-| **Pact** | Arbitration | Judgment-requiring commitments |
+| Kleros / UMA / Reality.eth | Resolution | Dispute markets for their own claim formats |
+| **Pact** | Commitment | Standard format for judgment-requiring commitments, resolver-agnostic |
 
-Pact is not a replacement for these systems — it's complementary. Use smart contracts for deterministic triggers, Cicero for computable clauses, and Pact for everything that needs a judge.
+Pact is not a replacement for these systems — it's complementary. Use smart contracts for deterministic triggers, Cicero for computable clauses, existing dispute markets as resolvers where their assurances fit, and Pact as the common commitment layer above them.
+
+---
+
+## Pacts and the Agent Economy
+
+The near-term reason this primitive matters: **AI agents are becoming economic actors**, and they can't sign legal contracts or sit through human arbitration.
+
+Two agents negotiating a service engagement need exactly what Pact provides: structured terms a model can draft and evaluate, cryptographic acceptance, stakes, and a resolver cheap and fast enough to arbitrate small-value work. The surrounding stack is arriving — [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) for portable agent identity and reputation, [x402](https://www.x402.org) for agent-native payments, [EAS](https://attest.org) for verifiable attestations. Pact is designed to slot in as the commitment layer: party IDs can be agent identities, stake settlement can ride agent payment rails, and resolutions can be emitted as attestations that feed agent reputation.
+
+A human hiring a freelancer and an agent hiring another agent produce the same object: a pact.
 
 ---
 
