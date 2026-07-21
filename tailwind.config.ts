@@ -8,12 +8,16 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['"JetBrains Mono"', '"Fira Code"', 'ui-monospace', 'monospace'],
+        sans: ['"Neue Haas Grotesk Text"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+        mono: ['ui-monospace', '"SF Mono"', '"JetBrains Mono"', '"Fira Mono"', 'monospace'],
       },
       colors: {
-        bg: '#0a0a0a',
-        border: '#333',
-        text: '#e5e5e5',
+        bg: 'var(--canvas)',
+        surface: 'var(--surface)',
+        border: 'var(--line)',
+        'border-2': 'var(--line-2)',
+        text: 'var(--ink-2)',
+        ink: 'var(--ink)',
       },
     },
   },

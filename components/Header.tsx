@@ -14,19 +14,17 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 bg-bg border-b border-border">
-      <div className="max-w-[1000px] mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-white font-bold text-lg no-underline hover:opacity-80">
+    <header className="site-nav sticky top-0 z-50">
+      <div className="max-w-[1000px] mx-auto px-6 h-[54px] flex items-center justify-between">
+        <Link href="/" className="nav-mark">
           Pact
         </Link>
-        <nav className="flex gap-4 text-sm">
+        <nav className="flex gap-5">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`no-underline hover:opacity-80 transition-opacity ${
-                pathname === link.href ? 'text-white' : 'text-text'
-              }`}
+              className={`nav-link${pathname === link.href ? ' active' : ''}`}
             >
               {link.label}
             </Link>

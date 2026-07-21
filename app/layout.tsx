@@ -4,8 +4,8 @@ import Footer from '@/components/Footer';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
-  title: 'Pact — Machine-Evaluable Commitments',
-  description: 'A minimal primitive for machine-evaluable commitments.',
+  title: 'PACT Protocol — machine-evaluable commitments',
+  description: 'The open protocol for machine-evaluable commitments: sealed terms, hash-committed evidence, resolver-agnostic settlement.',
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-bg text-text font-mono min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1 max-w-[1000px] w-full mx-auto px-6 py-10">
           {children}
