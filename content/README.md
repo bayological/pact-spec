@@ -138,9 +138,9 @@ A human hiring a freelancer and an agent hiring another agent produce the same o
 
 ## Get Started
 
-- [Specification](/pact-spec/specification) — The complete schema
-- [Examples](/pact-spec/examples) — Concrete pact instances
-- [Resolvers](/pact-spec/resolvers) — How resolution works
+- [Specification](/specification) — The complete schema
+- [Examples](/examples) — Concrete pact instances
+- [Resolvers](/resolvers) — How resolution works
 
 ---
 
