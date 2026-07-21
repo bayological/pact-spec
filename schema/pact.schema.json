@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bayological.github.io/pact-spec/schema/pact.schema.json",
+  "title": "Pact",
+  "description": "A signed, machine-evaluable commitment between parties. Spec version 0.2.",
+  "type": "object",
+  "required": ["pact"],
+  "additionalProperties": false,
+  "properties": {
+    "pact": {
+      "type": "object",
+      "required": ["version", "id", "parties", "terms", "stakes", "resolver", "resolution_policy", "state"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "type": "string", "pattern": "^0\\.2$" },
+        "id": { "type": "string", "pattern": "^pact_[0-9A-HJKMNP-TV-Z]{26}$" },
+        "parties": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/party" }
+        },
+        "terms": { "$ref": "#/$defs/terms" },
+        "stakes": { "$ref": "#/$defs/stakes" },
+        "resolver": { "$ref": "#/$defs/resolver" },
+        "resolution_policy": { "$ref": "#/$defs/resolutionPolicy" },
+        "state": {
+          "enum": ["proposed", "active", "asserted", "disputed", "resolved", "expired", "cancelled"]
+        },
+        "signatures": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/signature" }
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidenceItem" }
+        },
+        "resolutions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/resolution" }
+        },
+        "metadata": { "$ref": "#/$defs/metadata" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "state": { "not": { "const": "proposed" } } } },
+          "then": { "required": ["signatures"] }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration": {
+      "type": "string",
+      "pattern": "^P(?!$)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+S)?)?$"
+    },
+    "sha256Hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{6,64}(\\.\\.\\.)?$"
+    },
+    "caip10": {
+      "type": "string",
+      "pattern": "^eip155:\\d+:0x[0-9a-fA-F]{4,40}(\\.\\.\\.)?$"
+    },
+    "caip19": {
+      "type": "string",
+      "pattern": "^eip155:\\d+/[a-z0-9]+:.+$"
+    },
+    "did": {
+      "type": "string",
+      "pattern": "^did:[a-z0-9]+:.+$"
+    },
+    "partyId": {
+      "oneOf": [
+        { "$ref": "#/$defs/caip10" },
+        { "$ref": "#/$defs/did" },
+        { "type": "string", "pattern": "^mailto:.+@.+$" },
+        { "const": "open" }
+      ]
+    },
+    "party": {
+      "type": "object",
+      "required": ["id", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/partyId" },
+        "role": { "type": "string", "minLength": 1 },
+        "scheme": { "enum": ["eip155", "did", "email"] }
+      },
+      "if": { "properties": { "id": { "not": { "const": "open" } } } },
+      "then": { "required": ["id", "role", "scheme"] }
+    },
+    "terms": {
+      "type": "object",
+      "required": ["description", "acceptance_criteria", "deadline"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string", "minLength": 1 },
+        "acceptance_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "context": { "type": "string" },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["hash", "uri"],
+            "additionalProperties": false,
+            "properties": {
+              "hash": { "$ref": "#/$defs/sha256Hash" },
+              "uri": { "type": "string", "format": "uri" },
+              "type": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "deadline": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "dispositionMap": {
+      "type": "object",
+      "required": ["fulfilled", "breached", "partial", "void", "indeterminate"],
+      "additionalProperties": false,
+      "properties": {
+        "fulfilled": { "$ref": "#/$defs/distribution" },
+        "breached": { "$ref": "#/$defs/distribution" },
+        "partial": {
+          "oneOf": [{ "$ref": "#/$defs/distribution" }, { "const": "resolver" }]
+        },
+        "void": { "$ref": "#/$defs/distribution" },
+        "indeterminate": { "$ref": "#/$defs/distribution" }
+      }
+    },
+    "distribution": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^(0(\\.\\d+)?|1(\\.0+)?)$"
+      }
+    },
+    "escrowDetails": {
+      "type": "object",
+      "required": ["asset", "amount", "funder", "beneficiary", "disposition"],
+      "additionalProperties": false,
+      "properties": {
+        "asset": { "$ref": "#/$defs/caip19" },
+        "amount": { "type": "string", "pattern": "^[0-9]+$" },
+        "funder": { "type": "string" },
+        "beneficiary": { "type": "string" },
+        "contract": { "type": "string" },
+        "disposition": { "$ref": "#/$defs/dispositionMap" },
+        "partial_release": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["criteria", "fraction"],
+            "additionalProperties": false,
+            "properties": {
+              "criteria": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "integer", "minimum": 0 }
+              },
+              "fraction": {
+                "type": "string",
+                "pattern": "^(0(\\.\\d+)?|1(\\.0+)?)$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "stakeEntry": {
+      "type": "object",
+      "required": ["type", "details"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["escrow", "reputation", "access"] },
+        "details": { "type": "object" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "escrow" } } },
+          "then": { "properties": { "details": { "$ref": "#/$defs/escrowDetails" } } }
+        }
+      ]
+    },
+    "stakes": {
+      "type": "object",
+      "required": ["type", "details"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["escrow", "reputation", "access", "composite"] },
+        "details": {}
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "escrow" } } },
+          "then": { "properties": { "details": { "$ref": "#/$defs/escrowDetails" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "composite" } } },
+          "then": {
+            "properties": {
+              "details": {
+                "type": "array",
+                "minItems": 2,
+                "items": { "$ref": "#/$defs/stakeEntry" }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "resolver": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["ai", "human", "dao", "oracle", "peer", "hybrid"] },
+        "endpoint": { "type": "string", "format": "uri" },
+        "config": { "type": "object" }
+      }
+    },
+    "resolutionPolicy": {
+      "type": "object",
+      "required": ["mode"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["optimistic", "direct"] },
+        "challenge_window": { "$ref": "#/$defs/duration" },
+        "resolution_timeout": { "$ref": "#/$defs/duration" },
+        "appeal": {
+          "type": "object",
+          "required": ["resolver", "window"],
+          "additionalProperties": false,
+          "properties": {
+            "resolver": { "$ref": "#/$defs/resolver" },
+            "window": { "$ref": "#/$defs/duration" },
+            "max_rounds": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "optimistic" } } },
+          "then": { "required": ["mode", "challenge_window", "resolution_timeout"] }
+        }
+      ]
+    },
+    "signature": {
+      "type": "object",
+      "required": ["party", "scheme", "commitment_hash", "signature", "signed_at"],
+      "additionalProperties": false,
+      "properties": {
+        "party": { "$ref": "#/$defs/partyId" },
+        "scheme": { "enum": ["eip712", "eip1271", "jws"] },
+        "commitment_hash": { "$ref": "#/$defs/sha256Hash" },
+        "signature": { "type": "string", "minLength": 1 },
+        "signed_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "evidenceItem": {
+      "type": "object",
+      "required": ["party", "hash", "submitted_at"],
+      "additionalProperties": false,
+      "properties": {
+        "party": { "$ref": "#/$defs/partyId" },
+        "hash": { "$ref": "#/$defs/sha256Hash" },
+        "uri": { "type": "string", "format": "uri" },
+        "type": { "type": "string" },
+        "description": { "type": "string" },
+        "submitted_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "resolution": {
+      "type": "object",
+      "required": ["round", "outcome", "reasoning", "resolved_by", "resolved_at"],
+      "additionalProperties": false,
+      "properties": {
+        "round": { "type": "integer", "minimum": 0 },
+        "outcome": { "enum": ["fulfilled", "breached", "partial", "void", "indeterminate"] },
+        "reasoning": { "type": "string", "minLength": 1 },
+        "criteria_evaluation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["criterion", "met"],
+            "additionalProperties": false,
+            "properties": {
+              "criterion": { "type": "integer", "minimum": 0 },
+              "met": { "type": "boolean" },
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "disposition": { "$ref": "#/$defs/distribution" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "resolved_by": { "type": "string", "minLength": 1 },
+        "resolved_at": { "$ref": "#/$defs/timestamp" },
+        "final": { "type": "boolean" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "created_at": { "$ref": "#/$defs/timestamp" },
+        "updated_at": { "$ref": "#/$defs/timestamp" },
+        "chain": { "type": "string" },
+        "contract_address": { "type": "string" }
+      }
+    }
+  }
+}
